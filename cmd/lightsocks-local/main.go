@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"/cmd"
+	"./cmd"
 	"log"
 	"net"
 )
