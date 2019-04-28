@@ -9,6 +9,7 @@ type LsLocal struct {
 	Cipher     *cipher
 	ListenAddr *net.TCPAddr
 	RemoteAddr *net.TCPAddr
+	HostName   string
 }
 
 // 新建一个本地端
@@ -34,6 +35,7 @@ func NewLsLocal(password string, listenAddr, remoteAddr string) (*LsLocal, error
 		Cipher:     newCipher(bsPassword),
 		ListenAddr: structListenAddr,
 		RemoteAddr: structRemoteAddr,
+		HostName:	remoteAddr,
 	}, nil
 }
 
@@ -44,6 +46,10 @@ func (local *LsLocal) Listen(didListen func(listenAddr net.Addr)) error {
 
 func (local *LsLocal) handleConn(userConn *SecureTCPConn) {
 	defer userConn.Close()
+
+	structRemoteAddr, err := net.ResolveTCPAddr("tcp", local.HostName)
+	local.RemoteAddr = structRemoteAddr
+	log.Printf("重新连接，远程服务地址：%s\n",structRemoteAddr)
 
 	proxyServer, err := DialTCPSecure(local.RemoteAddr, local.Cipher)
 	if err != nil {
