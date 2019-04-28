@@ -2,8 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/gwuhaolin/lightsocks"
-	"github.com/gwuhaolin/lightsocks/cmd"
+	"/cmd"
 	"log"
 	"net"
 )
