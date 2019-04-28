@@ -3,6 +3,7 @@ package lightsocks
 import (
 	"log"
 	"net"
+	"time"
 )
 
 type LsLocal struct {
@@ -48,8 +49,10 @@ func (local *LsLocal) handleConn(userConn *SecureTCPConn) {
 	defer userConn.Close()
 
 	structRemoteAddr, err := net.ResolveTCPAddr("tcp", local.HostName)
-	local.RemoteAddr = structRemoteAddr
-	log.Printf("重新连接，远程服务地址：%s\n",structRemoteAddr)
+	if ( local.RemoteAddr!=structRemoteAddr ){
+		local.RemoteAddr = structRemoteAddr
+		log.Printf(time.Now().Format(time.RFC3339) + ":重新连接，远程服务地址：%s\n",structRemoteAddr)
+	}
 
 	proxyServer, err := DialTCPSecure(local.RemoteAddr, local.Cipher)
 	if err != nil {
